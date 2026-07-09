@@ -1,0 +1,75 @@
+name: Validate Skill Submissions
+
+on:
+  pull_request:
+    paths:
+      - 'skills/**/*.json'
+
+jobs:
+  validate-skills:
+    name: Run Folio Security Scanner
+    runs-on: macos-14 # Ensure we have a modern macOS/Swift environment
+
+    steps:
+      - name: Checkout Registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Need history to diff changed files
+
+      - name: Checkout Folio CLI (The Scanner)
+        uses: actions/checkout@v4
+        with:
+          repository: 'YOUR_GITHUB_USERNAME/folio' # ⚠️ REPLACE THIS with your actual CLI repo
+          path: 'folio-cli-source'
+
+      - name: Build Folio CLI
+        run: |
+          cd folio-cli-source
+          swift build -c release
+          sudo cp .build/release/folio /usr/local/bin/folio
+          folio --version
+
+      - name: Install jq (JSON Parser)
+        run: brew install jq
+
+      - name: Validate Changed Skills
+        run: |
+          # Find all skill.json files changed in this PR
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep 'skill.json$' || true)
+          
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No skill.json files changed. Skipping validation."
+            exit 0
+          fi
+          
+          for FILE in $CHANGED_FILES; do
+            echo "========================================"
+            echo "🔍 Validating submission: $FILE"
+            
+            # Extract data from the JSON
+            REPO=$(jq -r '.repo' $FILE)
+            REF=$(jq -r '.ref' $FILE)
+            SKILL_PATH=$(jq -r '.path' $FILE)
+            EXPECTED_HASH=$(jq -r '.contentHash' $FILE)
+            
+            # Clone the submitter's actual repository into a scratch folder
+            SCRATCH_DIR="/tmp/folio-scan-$(uuidgen)"
+            git clone --depth 1 --branch "$REF" "https://github.com/$REPO.git" "$SCRATCH_DIR"
+            
+            TARGET_DIR="$SCRATCH_DIR/$SKILL_PATH"
+            
+            # Run the CLI validate command (This will throw a non-zero exit code if a Block is found)
+            echo "Executing: folio validate $TARGET_DIR"
+            folio validate "$TARGET_DIR" > validation_output.txt
+            cat validation_output.txt
+            
+            # Optional but highly recommended: Verify the hash matches what they put in the JSON
+            ACTUAL_HASH=$(grep -o "sha256:[a-f0-9]*" validation_output.txt | head -n 1)
+            if [ "$ACTUAL_HASH" != "$EXPECTED_HASH" ]; then
+              echo "❌ Hash Mismatch! PR states $EXPECTED_HASH but scanner computed $ACTUAL_HASH"
+              exit 1
+            fi
+            
+            echo "✅ $FILE passed all checks."
+            echo "========================================"
+          done

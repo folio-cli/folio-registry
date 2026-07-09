@@ -1,0 +1,16 @@
+{
+  "name": "accessibility-auditor",
+  "description": "Audits SwiftUI and UIKit views for common accessibility gaps — missing labels, poor contrast, unreachable focus order.",
+  "repo": "vanshdev/accessibility-auditor-skill",
+  "path": "skills/accessibility-auditor",
+  "ref": "v1.2.0",
+  "category": "accessibility",
+  "license": "MIT",
+  "author": { "github": "vanshdev", "name": "Vansh" },
+  "compatibility": {
+    "minXcode": "16.0",
+    "minSwift": "6.0"
+  },
+  "contentHash": "sha256:abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234",
+  "lastVerified": { "date": "2026-07-10", "commit": "a1b2c3d" }
+}

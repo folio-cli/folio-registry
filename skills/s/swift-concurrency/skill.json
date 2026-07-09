@@ -1,0 +1,16 @@
+{
+  "name": "swift-concurrency",
+  "description": "Modernizes completion-handler based Swift code into async/await. Understands actor isolation and MainActor boundary rules.",
+  "repo": "AvdLee/swift-concurrency-agent-skill",
+  "path": "swift-concurrency",
+  "ref": "v2.1.1",
+  "category": "swift",
+  "license": "MIT",
+  "author": { "github": "AvdLee", "name": "Antoine van der Lee" },
+  "compatibility": {
+    "minXcode": "16.0",
+    "minSwift": "6.0"
+  },
+  "contentHash": "sha256:9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+  "lastVerified": { "date": "2026-07-10", "commit": "0d472de" }
+}
