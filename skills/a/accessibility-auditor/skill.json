@@ -11,6 +11,6 @@
     "minXcode": "16.0",
     "minSwift": "6.0"
   },
-  "contentHash": "sha256:37d5f5cc1d70a2b711d9466f366e7235199e5560752821ecde888cbd7645c813",
+  "contentHash": "sha256:0b6b29cb15f9b753b862f1e787253785224f24d70398f0ad06f78a67cba63e16",
   "lastVerified": { "date": "2026-07-10", "commit": "a1b2c3d" }
 }
