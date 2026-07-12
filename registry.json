@@ -1,0 +1,11 @@
+{
+  "skills": [
+    {
+      "name": "swift-concurrency",
+      "description": "Expert Swift Concurrency guidance: safe concurrency patterns, performance optimization, and Swift 6 migration.",
+      "repo": "AvdLee/Swift-Concurrency-Agent-Skill",
+      "path": "swift-concurrency",
+      "ref": "main"
+    }
+  ]
+}
